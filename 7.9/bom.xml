@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<buildConfig>
+<enabled>true</enabled>
+<ecProject />
+<ecProcedure />
+<ecResource />
+<xformsDocument />
+<os>win</os>
+<label>PYSGXTESTS-07.09.01.770</label>
+<source>
+<mks>
+<project>
+<componentName>pysgxtests</componentName>
+<category>gwautomation</category>
+<version>7.9</version>
+<label>PYSGXTESTS-07.09.01.770</label>
+<buildFromLabel />
+<devPath />
+<sourcePath>/SAN/mks-si/data1/projectsource/gwautomation/pysgxtests/main/main.pj</sourcePath>
+<savePath>C:\tt-dev\5023891\gwautomation\pysgxtests\7.9</savePath>
+<ciScheduleName />
+<versionedFiles />
+</project><project>
+	<componentName>pyutilities</componentName>
+	<version>7.9</version>
+	<category>gwautomation</category>
+	<sourcePath>/SAN/mks-si/data1/projectsource/gwautomation/pyutilities/main/main.pj</sourcePath>
+	<devPath />
+	<label>PYSGXTESTS-07.09.01.770</label>
+	<buildFromLabel />
+	<savePath>C:\tt-dev\5023891\gwautomation\pyutilities\7.9</savePath>
+	<versionedFiles />
+	<ciScheduleName />
+</project>
+</mks>
+<checkinVersionedFiles>false</checkinVersionedFiles><git /></source>
+<dependencies>
+<buildArtifacts>
+
+
+
+<artifact>
+<componentName>commontests</componentName>
+<category>gwautomation</category>
+<version>7.9</version>
+<label>COMMONTESTS-07.09.01.770</label>
+<os>win</os>
+<savePath>C:\tt-dev\5023891\gwautomation\commontests\7.9</savePath>
+<id />
+<includeSiblings>true</includeSiblings>
+<location>\\chirepo.int.tt.local\release\gwautomation\commontests\7.9\COMMONTESTS-07.09.01.770</location></artifact>
+<artifact><category>misc</category><label>PROTOBUF-02.04.00.000</label><location>\\chirepo.int.tt.local\release\misc\protobuf\2.4\PROTOBUF-02.04.00.000</location><componentName>protobuf</componentName><os>win</os><version>2.4</version><id>85912</id><siblingOf>gwautomation commontests 7.9 win COMMONTESTS-07.09.01.770</siblingOf><savePath>C:\tt-dev\5023891\misc\protobuf\2.4</savePath></artifact><artifact><category>gwautomation</category><label>PYTHIRDPARTY-02.07.02.005</label><location>\\chirepo.int.tt.local\release\gwautomation\pythirdparty\2.7\PYTHIRDPARTY-02.07.02.005</location><componentName>pythirdparty</componentName><os>win</os><version>2.7</version><id>225520</id><siblingOf>gwautomation commontests 7.9 win COMMONTESTS-07.09.01.770</siblingOf><savePath>C:\tt-dev\5023891\gwautomation\pythirdparty\2.7</savePath></artifact><artifact><category>gwautomation</category><label>TTMSNIFF-01.00.01.004</label><location>\\chirepo.int.tt.local\release\gwautomation\ttmsniff\1.0\TTMSNIFF-01.00.01.004</location><componentName>ttmsniff</componentName><os>win</os><version>1.0</version><id>61281</id><siblingOf>gwautomation commontests 7.9 win COMMONTESTS-07.09.01.770</siblingOf><savePath>C:\tt-dev\5023891\gwautomation\ttmsniff\1.0</savePath></artifact><artifact><category>misc</category><label>FIXIT-01.00.03.020</label><location>\\chirepo.int.tt.local\release\misc\fixit\1.0\FIXIT-01.00.03.020</location><componentName>fixit</componentName><os>win</os><version>1.0</version><id>235936</id><siblingOf>gwautomation commontests 7.9 win COMMONTESTS-07.09.01.770</siblingOf><savePath>C:\tt-dev\5023891\misc\fixit\1.0</savePath></artifact><artifact><category>gwautomation</category><label>CAPTAIN-07.09.01.770</label><location>\\chirepo.int.tt.local\release\gwautomation\captain\7.9\CAPTAIN-07.09.01.770</location><componentName>captain</componentName><os>win</os><version>7.9</version><id>269890</id><siblingOf>gwautomation commontests 7.9 win COMMONTESTS-07.09.01.770</siblingOf><savePath>C:\tt-dev\5023891\gwautomation\captain\7.9</savePath></artifact><artifact><category>gwautomation</category><label>PYCPPCLIENT-07.09.01.770</label><location>\\chirepo.int.tt.local\release\gwautomation\pycppclient\7.9\PYCPPCLIENT-07.09.01.770</location><componentName>pycppclient</componentName><os>win</os><version>7.9</version><id>269886</id><siblingOf>gwautomation commontests 7.9 win COMMONTESTS-07.09.01.770</siblingOf><savePath>C:\tt-dev\5023891\gwautomation\pycppclient\7.9</savePath></artifact></buildArtifacts>
+<failOnConsistencyFailure>true</failOnConsistencyFailure>
+</dependencies>
+<compilation />
+<output>
+<buildArtifacts>
+<artifact>
+<main>true</main>
+<componentName>pysgxtests</componentName>
+<category>gwautomation</category>
+<version>7.9</version>
+<label>PYSGXTESTS-07.09.01.770</label>
+<os>win</os>
+<files><file><localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx</localPath><destinationPath>dev/sgx/</destinationPath><fileNames>*.*</fileNames></file><file><localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/tests/</localPath><destinationPath>dev/sgx/tests/</destinationPath><fileNames>*.*</fileNames></file><file>
+	<localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/tests/account_based_risk</localPath>
+	<destinationPath>dev/sgx/tests/account_based_risk/</destinationPath>
+	<fileNames>*.*</fileNames>
+</file><file>
+	<localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/tests/configuration</localPath>
+	<destinationPath>dev/sgx/tests/configuration/</destinationPath>
+	<fileNames>*.*</fileNames>
+</file><file>
+	<localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/tests/fill_server</localPath>
+	<destinationPath>dev/sgx/tests/fill_server/</destinationPath>
+	<fileNames>*.*</fileNames>
+</file><file><localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/tests/log_files</localPath><destinationPath>dev/sgx/tests/log_files/</destinationPath><fileNames>*.*</fileNames></file><file><localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/tests/login</localPath><destinationPath>dev/sgx/tests/login/</destinationPath><fileNames>*.*</fileNames></file><file><localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/tests/order_server</localPath><destinationPath>dev/sgx/tests/order_server/</destinationPath><fileNames>*.*</fileNames></file><file>
+	<localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/tests/order_server/order_book</localPath>
+	<destinationPath>dev/sgx/tests/order_server/order_book/</destinationPath>
+	<fileNames>*.*</fileNames>
+</file><file>
+	<localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/tests/order_server/order_throttling</localPath>
+	<destinationPath>dev/sgx/tests/order_server/order_throttling/</destinationPath>
+	<fileNames>*.*</fileNames>
+</file><file><localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/tests/order_server/order_management</localPath><destinationPath>dev/sgx/tests/order_server/order_management/</destinationPath><fileNames>*.*</fileNames></file><file><localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/tests/price_server</localPath><destinationPath>dev/sgx/tests/price_server/</destinationPath><fileNames>*.*</fileNames></file><file>
+	<localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/tests/price_server/contract_data</localPath>
+	<destinationPath>dev/sgx/tests/price_server/contract_data/</destinationPath>
+	<fileNames>*.*</fileNames>
+</file><file>
+	<localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/tests/price_server/market_data</localPath>
+	<destinationPath>dev/sgx/tests/price_server/market_data/</destinationPath>
+	<fileNames>*.*</fileNames>
+</file><file>
+	<localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/tests/price_server/price_data</localPath>
+	<destinationPath>dev/sgx/tests/price_server/price_data/</destinationPath>
+	<fileNames>*.*</fileNames>
+</file><file>
+	<localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/tests/recovery_reliability</localPath>
+	<destinationPath>dev/sgx/tests/recovery_reliability/</destinationPath>
+	<fileNames>*.*</fileNames>
+</file><file>
+	<localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/tests/smoke</localPath>
+	<destinationPath>dev/sgx/tests/smoke/</destinationPath>
+	<fileNames>*.*</fileNames>
+</file><file>
+	<localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/tests/strategy_creation</localPath>
+	<destinationPath>dev/sgx/tests/strategy_creation/</destinationPath>
+	<fileNames>*.*</fileNames>
+</file><file><localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/validation</localPath><destinationPath>dev/sgx/validation/</destinationPath><fileNames>*.*</fileNames></file><file><localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/validation/fill</localPath><destinationPath>dev/sgx/validation/fill/</destinationPath><fileNames>*.*</fileNames></file><file><localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/validation/log_files</localPath><destinationPath>dev/sgx/validation/log_files/</destinationPath><fileNames>*.*</fileNames></file><file>
+	<localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/validation/login</localPath>
+	<destinationPath>dev/sgx/validation/login/</destinationPath>
+	<fileNames>*.*</fileNames>
+</file><file><localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/validation/order</localPath><destinationPath>dev/sgx/validation/order/</destinationPath><fileNames>*.*</fileNames></file><file><localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/validation/order_book</localPath><destinationPath>dev/sgx/validation/order_book/</destinationPath><fileNames>*.*</fileNames></file><file>
+	<localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/validation/price</localPath>
+	<destinationPath>dev/sgx/validation/price/</destinationPath>
+	<fileNames>*.*</fileNames>
+</file><file>
+	<localPath>gwautomation/pysgxtests/%TT_PYSGXTESTS_VERSION%/dev/sgx/validation/rfq</localPath>
+	<destinationPath>dev/sgx/validation/rfq/</destinationPath>
+	<fileNames>*.*</fileNames>
+</file></files><location>\\chirepo.int.tt.local\release\gwautomation\pysgxtests\7.9\PYSGXTESTS-07.09.01.770</location></artifact><artifact>
+	<main type="xsd:boolean">false</main>
+	<componentName>pyutilities</componentName>
+	<category>gwautomation</category>
+	<version>7.9</version>
+	<os>win</os>
+	<label>PYSGXTESTS-07.09.01.770</label>
+	<files><file><localPath>gwautomation/pyutilities/%TT_PYUTILITIES_VERSION%/dev</localPath><destinationPath>dev/</destinationPath><fileNames>*.*</fileNames></file><file><localPath>gwautomation/pyutilities/%TT_PYUTILITIES_VERSION%/dev/pluggins</localPath><destinationPath>dev/pluggins</destinationPath><fileNames>*.*</fileNames></file></files><location>\\chirepo.int.tt.local\release\gwautomation\pyutilities\7.9\PYSGXTESTS-07.09.01.770</location></artifact>
+</buildArtifacts>
+<buildNotes>
+<note>
+<componentName>pysgxtests</componentName>
+<category>gwautomation</category>
+<version>7.9</version>
+<label>PYSGXTESTS-07.09.01.770</label>
+<os>win</os>
+</note>
+</buildNotes>
+<defaultState>green</defaultState></output>
+<buildNotes>
+<mksProducts />
+<performValidation>false</performValidation>
+</buildNotes>
+<notifications>
+<success>christine.tanner@tradingtechnologies.com, chris.maurer@tradingtechnologies.com</success>
+<failure>christine.tanner@tradingtechnologies.com, chris.maurer@tradingtechnologies.com</failure>
+<abort>christine.tanner@tradingtechnologies.com, chris.maurer@tradingtechnologies.com</abort>
+<other>christine.tanner@tradingtechnologies.com, chris.maurer@tradingtechnologies.com</other>
+</notifications>
+<postBuildCommands />
+<labelAutoIncrementValue>1</labelAutoIncrementValue>
+<nightly>
+<enabled>false</enabled>
+<nightlyLabel />
+<abortOnNoChange>false</abortOnNoChange>
+</nightly>
+<environmentVars />
+<continuousIntegration>
+<enabled>false</enabled>
+<ciLabel />
+<ecProperty />
+<launchCondition>immediate</launchCondition>
+</continuousIntegration>
+<className>production</className><environmentVarsAuto><variable><name>TT_PROTOBUF_LABEL</name><value>PROTOBUF-02.04.00.000</value></variable><variable><name>TT_PROTOBUF_VERSION</name><value>2.4</value></variable><variable><name>TT_PYTHIRDPARTY_LABEL</name><value>PYTHIRDPARTY-02.07.02.005</value></variable><variable><name>TT_PYTHIRDPARTY_VERSION</name><value>2.7</value></variable><variable><name>TT_TTMSNIFF_LABEL</name><value>TTMSNIFF-01.00.01.004</value></variable><variable><name>TT_TTMSNIFF_VERSION</name><value>1.0</value></variable><variable><name>TT_FIXIT_LABEL</name><value>FIXIT-01.00.03.020</value></variable><variable><name>TT_FIXIT_VERSION</name><value>1.0</value></variable><variable><name>TT_CAPTAIN_LABEL</name><value>CAPTAIN-07.09.01.770</value></variable><variable><name>TT_CAPTAIN_VERSION</name><value>7.9</value></variable><variable><name>TT_PYCPPCLIENT_LABEL</name><value>PYCPPCLIENT-07.09.01.770</value></variable><variable><name>TT_PYCPPCLIENT_VERSION</name><value>7.9</value></variable><variable><name>TT_PYSGXTESTS_VERSION</name><value>7.9</value></variable><variable><name>TT_PYSGXTESTS_LABEL</name><value>PYSGXTESTS-07.09.01.770</value></variable><variable><name>TT_PYUTILITIES_VERSION</name><value>7.9</value></variable><variable><name>TT_PYUTILITIES_LABEL</name><value>PYSGXTESTS-07.09.01.770</value></variable><variable><name>TT_BUILD_PROJECT</name><value>pysgxtests 7.9 win production</value></variable><variable><name>TT_BUILD_HOME</name><value>C:\tt-dev\5023891</value></variable><variable><name>TT_BUILD_JOBID</name><value>5023891</value></variable><variable><name>TT_BUILD_CLASS</name><value>production</value></variable><variable><name>TT_BUILD_OS</name><value>win</value></variable><variable><name>TT_BUILD_REQUESTOR</name><value>cmaurer</value></variable><variable><name>TT_API_PATH</name><value>C:\tt-dev\5023891</value></variable><variable><name>TT_DEV_HOME</name><value>C:\tt-dev\5023891</value></variable><variable><name>TT_COMMONTESTS_VERSION</name><value>7.9</value></variable><variable><name>TT_COMMONTESTS_LABEL</name><value>COMMONTESTS-07.09.01.770</value></variable><variable><name>TT_NEW_PYSGXTESTS_VERSION</name><value>7.9</value></variable><variable><name>TT_NEW_PYSGXTESTS_LABEL</name><value>PYSGXTESTS-07.09.01.770</value></variable><variable><name>TT_NEW_PYUTILITIES_VERSION</name><value>7.9</value></variable><variable><name>TT_NEW_PYUTILITIES_LABEL</name><value>PYSGXTESTS-07.09.01.770</value></variable></environmentVarsAuto></buildConfig>

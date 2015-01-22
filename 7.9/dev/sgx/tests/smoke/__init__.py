@@ -1,0 +1,2 @@
+import test_smoke_order_management
+import test_smoke_price_server 
