@@ -57,8 +57,8 @@ def date_exch_is_zero(action, before, after):
     compare(date_exch_after.mth, 0)
     compare(date_exch_after.day, 0)
 
-#def passive_aggressive_flag_is_set(action, before, after):
-#    compare(after.pending.order_flags, aenums.TT_PASSIVE_MOD_CODE, op=operator.eq)
+def passive_aggressive_flag_is_set(action, before, after):
+   compare(after.pending.order_flags, aenums.TT_PASSIVE_MOD_CODE, op=operator.eq)
 
 def time_processed_is_not_zero(action, before, after):
 
