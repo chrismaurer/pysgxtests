@@ -65,18 +65,24 @@ mf_config = MarketFinderConfigData()
 mf_config.timeout = 500
 mf_config.depth = 20
 mf_config.maxTriesPerProduct = 12
+mf_config.useDefaultBestPriceFirst = True
+mf_config.defaultBestPrice = 2.00
 mf_config.useCache = True
 mf_config.fixLotQty = True
 mf_config.failPatterns = [re.compile('.*Illegal transaction at this time.*'),
                          re.compile('.*The transaction is not valid for this instrument type.*'),
                          re.compile('.*Given time validity is not allowed.*'),
+                         re.compile('.*Given premium is not allowed.*'),
                           re.compile('.*The series first trading time is in the future.*'),
                           re.compile('.*The series \(or its underlying\) is stopped.*'),
                           re.compile('.*Pre-trade server could not find series.*'),
-                          re.compile('.*User is not allowed to act in this instrument type.*')]
+                          re.compile('.*User is not allowed to act in this instrument type.*'),
+                          re.compile('.*A required limit has not been set.*')]
 mf_config.acceptable_reject_messages = ['No qty filled or placed in order book; EX: omniapi_tx_ex() returned 0 with txstat 1',
                                         'EX: transaction aborted (Order-book volume was too low to fill order.)',
-                                        'EX: transaction aborted (Allowed Order Quantity limit exceeded)']
+                                        'EX: transaction aborted (Allowed Order Quantity limit exceeded)',
+                                        'EX: transaction aborted (Market orders are not allowed for this instrument)',
+                                        'EX: transaction aborted (The trigger order trigger time validity is not valid.)']
 
 mf_option_config = deepcopy(mf_config)
 mf_option_config.maxTriesPerProduct = 120
@@ -96,9 +102,15 @@ ProductGroup.SPECIFIC.register(pred)
 
 ProductGroup.ENERGY.register(['EF',])
 
-futures_filter = [ProductType.FUTURE, ContractFilter.TRADABLE]
-fspread_filter = [ProductType.FSPREAD, ContractFilter.TRADABLE]
-option_filter = [ProductType.OPTION, ContractFilter.TRADABLE]
+ProductGroup.FUTURE.register(['MEGF', 'SMCF'])#'NCH', 'NMD', 'NID'])#, 'SY', 'LPF'])
+
+#ProductGroup.FSPREAD.register(['IDR', 'MYR', 'MYS', 'PHP'])
+
+#ProductGroup.OPTION.register(['SWF', ])
+
+futures_filter = [ProductType.FUTURE, ContractFilter.TRADABLE, ProductGroup.FUTURE]
+fspread_filter = [ProductType.FSPREAD, ContractFilter.TRADABLE]#, ProductGroup.FSPREAD]
+option_filter = [ProductType.OPTION, ContractFilter.TRADABLE]#, ProductGroup.OPTION]
 ostrategy_filter = [ProductType.OSTRATEGY, ContractFilter.TRADABLE]
 energies_filter = [ProductType.ENERGY, ContractFilter.TRADABLE, ProductGroup.ENERGY]
 outrights = [ProductType.OUTRIGHT, ContractFilter.TRADABLE]
@@ -244,7 +256,7 @@ Strategy.INVALID.register({'legs':[StrategyLeg(base_preds=option_call_preds,
                            'tt_prod_type':aenums.TT_PROD_OSTRATEGY,
                            'tt_strategy_code':aenums.TT_TAILOR_MADE_COMB_ID})
 Messages.SERIES_CREATE_SUCCESS.register('Spread/Strategy created successfully')
-Messages.SERIES_CREATE_REJECT.register('DC3, EX: transaction aborted (Maximum ratio for the leg exceeded.)')
+Messages.SERIES_CREATE_REJECT.register('DC3, EX: transaction aborted \(Illegal ratio between the legs\.\)')
 Messages.SERIES_CREATE_INVERT_REJECT.register('You made a poopy strategy!')
 
 ###################################

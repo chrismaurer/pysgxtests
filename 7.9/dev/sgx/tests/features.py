@@ -64,8 +64,8 @@ gateway[OrderMod.PASSIVE_BEST_ONLY] = UNSUPPORTED
 ##############################################################################
 gateway[Tif.GTD] = SUPPORTED
 gateway[Tif.GTC] = SUPPORTED
-
 gateway[Tif.GTDATE] = UNSUPPORTED
+
 gateway[Tif.GIS] = UNSUPPORTED
 
 ##############################################################################
@@ -74,9 +74,9 @@ gateway[Tif.GIS] = UNSUPPORTED
 gateway[ProductType.FSPREAD] = SUPPORTED
 gateway[ProductType.FUTURE] = SUPPORTED
 gateway[ProductType.OPTION] = SUPPORTED
-gateway[ProductType.OSTRATEGY] = SUPPORTED
-gateway[ProductType.ENERGY] = SUPPORTED
 
+gateway[ProductType.ENERGY] = UNSUPPORTED
+gateway[ProductType.OSTRATEGY] = UNSUPPORTED
 gateway[ProductType.STOCK] = UNSUPPORTED
 
 #gateway.unsupported_accepts_hold.insert_combo(OrderType.LIMIT, OrderRes.ICEBERG, OrderMod.STOP)
@@ -85,7 +85,7 @@ gateway[ProductType.STOCK] = UNSUPPORTED
 #gateway.unsupported_accepts_hold.insert_combo(OrderMod.STOP, ProductType.OPTION)
 #gateway.unsupported_accepts_hold.insert_combo(OrderMod.STOP, ProductType.OSTRATEGY)
 
-gateway.unsupported.insert_combo(OrderType.MARKET,  Tif.GTC)
+gateway.unsupported.insert_combo(OrderType.MARKET, Tif.GTC)
 gateway.unsupported.insert_combo(OrderRes.IOC, Tif.GTC)
 gateway.unsupported.insert_combo(OrderRes.FOK, Tif.GTC)
 gateway.unsupported.insert_combo(OrderRes.LOO, OrderMod.IF_TOUCHED)
@@ -96,6 +96,14 @@ gateway.unsupported.insert_combo(OrderRes.LOO, OrderMod.STOP)
 gateway.unsupported.insert_combo(OrderRes.LOC, OrderMod.STOP)
 gateway.unsupported.insert_combo(OrderRes.MOO, OrderMod.STOP)
 gateway.unsupported.insert_combo(OrderRes.MOC, OrderMod.STOP)
+gateway.unsupported.insert_combo(OrderRes.LOO, ProductType.FSPREAD)
+gateway.unsupported.insert_combo(OrderRes.LOC, ProductType.FSPREAD)
+gateway.unsupported.insert_combo(OrderRes.MOO, ProductType.FSPREAD)
+gateway.unsupported.insert_combo(OrderRes.MOC, ProductType.FSPREAD)
+#gateway.unsupported.insert_combo(OrderRes.LOO, Tif.GTDATE)
+#gateway.unsupported.insert_combo(OrderRes.LOC, Tif.GTDATE)
+#gateway.unsupported.insert_combo(OrderRes.MOO, Tif.GTDATE)
+#gateway.unsupported.insert_combo(OrderRes.MOC, Tif.GTDATE)
 
 gateway_flags = OrderServerFlags()
 gateway_flags.across_prices = OrderServerFlags.SUPPORTED
@@ -123,12 +131,26 @@ gateway_flags.only_admin_gets_incomplete_order = True
 
 def get_order_info_flags(order_info):
     retval = copy.copy(gateway_flags)
+#    if order_info.res is OrderRes.MOO:
+#        retval.needs_opposite_market = True
 #    if order_info.otype is OrderType.MARKET and order_info.res is OrderRes.NONE:
 #        retval.exchange_cancelled = OrderServerFlags.EXPECT_REJECT
 #        if order_info.prod_type is [ProductType.OPTION, ProductType.OSTRATEGY]:
 #            retval.across_prices = OrderServerFlags.UNSUPPORTED
 #    if order_info.tif == Tif.GTD:
 #        retval.os_restart = OrderServerFlags.UNCHANGED
+    if order_info.res is [OrderRes.MOC, OrderRes.MOO]:
+        retval.add_del = OrderServerFlags.EXPECT_REJECT
+        retval.chg_hold_del = OrderServerFlags.EXPECT_REJECT
+        retval.hold_chg_del = OrderServerFlags.EXPECT_REJECT
+        retval.rep_del = OrderServerFlags.EXPECT_REJECT
+        retval.sub_after_onhold_del = OrderServerFlags.EXPECT_REJECT
+        retval.needs_opposite_market = True
+
+        print 'FUCK! '*6
+        print dir(retval)
+        print 'FUCK! '*6
+
     return retval
 
 def get_reject_order_info(field):
@@ -150,13 +172,17 @@ def get_market_finder_config(order_info):
     mf_config.failPatterns = (re.compile('.*Illegal transaction at this time.*'),
                              re.compile('.*The transaction is not valid for this instrument type.*'),
                              re.compile('.*Given time validity is not allowed.*'),
+                             re.compile('.*Given premium is not allowed.*'),
                              re.compile('.*The series first trading time is in the future.*'),
                              re.compile('.*The series \(or its underlying\) is stopped.*'),
                              re.compile('.*Pre-trade server could not find series.*'),
-                             re.compile('.*User is not allowed to act in this instrument type.*'))
+                             re.compile('.*User is not allowed to act in this instrument type.*'),
+                             re.compile('.*A required limit has not been set.*'))
     mf_config.acceptable_reject_messages = ['No qty filled or placed in order book; EX: omniapi_tx_ex() returned 0 with txstat 1',
                                             'EX: transaction aborted (Order-book volume was too low to fill order.)',
-                                            'EX: transaction aborted (Allowed Order Quantity limit exceeded)']
+                                            'EX: transaction aborted (Allowed Order Quantity limit exceeded)',
+                                            'EX: transaction aborted (Market orders are not allowed for this instrument)',
+                                            'EX: transaction aborted (The trigger order trigger time validity is not valid.)']
 
     if order_info.prod_type == ProductType.OPTION:
         mf_config.maxTriesPerProduct = 120
@@ -219,7 +245,9 @@ def get_valid_ob_scope_combos(combo, order_info):
 def get_product_group_for_order_info(order_info):
     from sgx.tests.utils import ProductGroup
 
-    if order_info.otype == OrderType.MARKET or order_info.tif == Tif.GTC:
+    if order_info.otype == OrderType.MARKET or order_info.tif == Tif.GTC \
+            or order_info.res == OrderRes.LOC or order_info.res == OrderRes.LOO \
+            or order_info.res == OrderRes.MOC or order_info.res == OrderRes.MOO:
         return order_info.clone(ProductGroup.SPECIFIC)
     else:
      return order_info

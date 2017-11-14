@@ -1,5 +1,6 @@
 #Python Imports
 import logging
+import time
 
 # Pyrate Imports
 from ttapi import aenums, cppclient
@@ -7,7 +8,8 @@ from ttapi.client import pythonify
 from captain import implements, scope, interface, Action, Context, OrderContext, create_context
 from captain.lib import Override, PriceQuantityChange, SetExpectedNonTradeDataFromFills,\
                         WaitForLastPricesOnTradeDataUpdateNoDuplicateCallbackCheck,\
-                        WaitForOrderStatus, WaitForDirectTradeDataIgnoreOtherCallbacks
+                        WaitForOrderStatus, WaitForDirectTradeDataIgnoreOtherCallbacks,\
+                        SetCurrentLastPrices
 from pyrate.manager import Manager
 
 # CommonTests Imports
@@ -18,6 +20,7 @@ log = logging.getLogger(__name__)
 SPQCOverride = [Override(PriceQuantityChange, Small_Price_Qty_Chg_Predicate())]
 
 SGXOverrides = []
+SGXTradestateOverrides = []
 
 ### predicate ####
 class IsSpreadChange(object):
@@ -97,6 +100,25 @@ class WaitForReplaceStatusFromSpreadChange(WaitForOrderStatus):
 
         return ctx
 
+### override ####
+@implements(WaitForOrderStatus)
+class WaitForAddStatusFromMOO(WaitForOrderStatus):
+
+    def run(self, ctx):
+
+        if ctx.pending.order_restrict == aenums.TT_MARKET_ON_OPEN_RES:
+
+            return WaitForOrderStatus(self.order_action, self.order_status,
+                                      self.order_action_orig,
+                                      timeout=self.timeout).run(ctx)
+
+        ctx = WaitForOrderStatus(order_action=aenums.TT_ORDER_ACTION_ADD,
+                                 order_status=aenums.TT_ORDER_STATUS_REJECTED,
+                                 order_action_orig=aenums.TT_ORDER_ACTION_ADD,
+                                 timeout=self.timeout).run(ctx)
+
+        return ctx
+
 #SGXOverrides.append(Override(WaitForReplaceStatusFromSpreadChange, IsSpreadChange()))
 
 #Predicate for Small Price Quantity Change
@@ -120,7 +142,19 @@ class OMAPISetExpectedNonTradeDataFromFills(SetExpectedNonTradeDataFromFills):
     def setup(self,
               resting_side,
               accum_ltq,
-              one_sec_trade_delay=False):
+              one_sec_trade_delay=True):
+        """
+        :param resting_side: the side of the first order sent
+                             before the fill
+        :type resting_side : AEnum_BuySellCodes
+        :param accum_ltq: whether the last traded qty is accumulated
+        :type accum_ltq: Boolean
+        :param one_sec_trade_delay: if it's set to 'True,' the trade was
+                                    made after one second sleep.
+                                    (Only the first trade of every second
+                                    puts a timestamp on the wire --PCR 172189)
+        :type one_sec_trade_delay: Boolean
+        """
 
         self.resting_side = resting_side
         self.accum_ltq = accum_ltq
@@ -189,7 +223,10 @@ class OMAPISetExpectedNonTradeDataFromFills(SetExpectedNonTradeDataFromFills):
                 # get Trade state
                 ts = get_last_price_value(aenums.TT_TRADE_STATE, ctx)
                 # set Trade state
-                new_ts = (aenums.TT_PRICE_STATE_ASK if self.resting_side == aenums.TT_BUY else
+                if ts == 0:
+                    new_ts = 0
+                else:
+                    new_ts = (aenums.TT_PRICE_STATE_ASK if self.resting_side == aenums.TT_BUY else
                                aenums.TT_PRICE_STATE_BID)
                 if new_ts != ts:
                     update_ctx_prices(ctx, aenums.TT_TRADE_STATE, new_ts)
@@ -197,28 +234,18 @@ class OMAPISetExpectedNonTradeDataFromFills(SetExpectedNonTradeDataFromFills):
                 # get high_price
                 high_prc = get_last_price_value(aenums.TT_HIGH_PRC, ctx)
                 # set high_price
-                # for override, set high_price on ctx.price_changes as well
                 if (high_prc == cppclient.TT_INVALID_PRICE) or (high_prc < new_ltp):
                     ctx.price_changes[aenums.TT_HIGH_PRC].append(new_ltp)
-                else:
-                    ctx.price_changes[aenums.TT_HIGH_PRC].append(high_prc)
 
                 # get low price
                 low_prc = get_last_price_value(aenums.TT_LOW_PRC, ctx)
                 # set low price
-                # for override, set low_price on ctx.price_changes as well
                 if (low_prc == cppclient.TT_INVALID_PRICE) or (low_prc > new_ltp):
                     ctx.price_changes[aenums.TT_LOW_PRC].append(new_ltp)
-                else:
-                    ctx.price_changes[aenums.TT_LOW_PRC].append(low_prc)
 
                 # set open if it does not exist
                 if aenums.TT_OPEN_PRC not in ctx.price_dict:
                     update_ctx_prices(ctx, aenums.TT_OPEN_PRC, new_ltp)
-
-                # for override, set open on ctx.price_changes if it does not exist
-                if aenums.TT_OPEN_PRC not in ctx.price_changes:
-                    ctx.price_changes[aenums.TT_OPEN_PRC].append(ctx.price_dict[aenums.TT_OPEN_PRC])
 
                 # set exch time stamp
                 # note: because the exact value of the exch time stamp
@@ -229,7 +256,6 @@ class OMAPISetExpectedNonTradeDataFromFills(SetExpectedNonTradeDataFromFills):
                    ctx.price_session.consumer.ServerCapabilities.\
                    Get(aenums.TT_SUPPORTS_EXCHANGE_TIMESTAMPS):
                     ctx.price_changes[aenums.TT_EXCH_TIMESTAMP]
-
         if fill_cbk_count == 0:
             raise AssertionError('Failed to set Expected NTD because no'
                                  ' fill callback found for prod.srs_exch_id: {0};'
@@ -243,6 +269,40 @@ class OMAPISetExpectedNonTradeDataFromFills(SetExpectedNonTradeDataFromFills):
 
         return ctx
 
-SGXOverrides.append(Override(OMAPISetExpectedNonTradeDataFromFills))
+@implements(SetCurrentLastPrices)
+class OMAPISetCurrentLastPrices(Action):
+    def run(self, ctx):
+
+        prices = ctx.price_session.getPrices(ctx.contract)
+        for price_id, price_value in prices.items():
+            ctx.price_dict[price_id] = price_value.value
+        #GetTradeData is only needed for contracts in PFX mode
+        #because TTQ is correct from getPrices and
+        #contracts in TTAPI mode do not have updates for
+        #TradeDirection
+        prc_tbl_rec_handle = ctx.price_session.getStrike(ctx.contract)
+        if ctx.price_session.consumer.IsPFX_Series(prc_tbl_rec_handle):
+            # sleeping here for new EMDI behavior (we can do a wait for non-trade data update instead)
+            time.sleep(10)
+            if ctx.price_session.consumer.GetTradeData(ctx.contract) is not None:
+                last_prices = \
+                ctx.price_session.consumer.GetTradeData(ctx.contract).LastPrices()
+                ctx.price_dict['TradeDirection'] = last_prices.GetLastTradeDirection()
+                ctx.price_dict[aenums.TT_LAST_TRD_PRC] = last_prices.GetLastTradedPrice()
+                ctx.price_dict[aenums.TT_LAST_TRD_QTY] = last_prices.GetLastTradedQty()
+                ctx.price_dict[aenums.TT_TRADE_STATE] = last_prices.GetTradeState()
+                ctx.price_dict[aenums.TT_TOTL_TRD_QTY] = last_prices.GetTotalTradedQty()
+
+         #removing recursion for new EMDI behavior -- left in commented out old code per Shailesh's request
+#        for idx, contract_ctx in enumerate(ctx.leg_contexts):
+#            ctx.leg_contexts[idx] = self.run(contract_ctx)
+
+        return ctx
+
+#SGXOverrides.append(Override(OMAPISetExpectedNonTradeDataFromFills))
+#SGXOverrides.append(Override(OMAPISetCurrentLastPrices))
+#SGXOverrides.append(Override(WaitForAddStatusFromMOO))
 SGXOverrides.append(Override(WaitForLastPricesOnTradeDataUpdateNoDuplicateCallbackCheck))
 SGXOverrides.append(Override(WaitForDirectTradeDataIgnoreOtherCallbacks))
+SGXTradestateOverrides.extend(SGXOverrides)
+SGXTradestateOverrides.append(Override(OMAPISetExpectedNonTradeDataFromFills))

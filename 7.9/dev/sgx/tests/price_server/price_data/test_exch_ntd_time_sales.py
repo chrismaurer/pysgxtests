@@ -8,16 +8,16 @@ from sgx.tests.utils import (mf_config, futures_filter, option_filter,
 
 from sgx.tests.overrides import SGXOverrides
 
-__all__ = ['TestNTDTimeAndSalesAllProducts']
+__all__ = ['TestNTDTimeAndSalesFutures']
 
-class TestNTDTimeAndSalesAllProducts(BaseTestNTDTimeAndSales):
+class TestNTDTimeAndSalesFutures(BaseTestNTDTimeAndSales):
 
     def __init__(self):
 
-        super(TestNTDTimeAndSalesAllProducts, self).__init__()
+        super(TestNTDTimeAndSalesFutures, self).__init__()
         register_crews(Worker.DIRECT)
 
-        self.market_config_and_filters = [(mf_config, [futures_filter, option_filter])]
+        self.market_config_and_filters = [(mf_config, [futures_filter, ])]
 
         self.accumulate_ltq_and_Aconfig_settings = [(False, {PFX_enabled : 'true', accumulate_ltq : '1', EchoCount : '0'}),
                                                     (True, {PFX_enabled : 'true', accumulate_ltq : '0', EchoCount : '0'})]

@@ -10,7 +10,7 @@ from commontests.price_server.templates.test_exch_smoke_test_template import (Ba
 from sgx.tests.utils import (mf_config, futures_filter, bounds_1_20, bounds_6_10, bounds_1_10)
 
 # Overrides
-from sgx.tests.overrides import SGXOverrides
+from sgx.tests.overrides import SGXOverrides, SGXTradestateOverrides
 
 __all__ = ['TestAggMarketSmoke', 'TestInsideMarketSmoke',
            'TestNTDTimeAndSalesFuturesSmoke', 'TestVAPSmoke']
@@ -29,7 +29,7 @@ class TestAggMarketSmoke(BaseTestAggregateDepthSmoke):
         self.market_config_and_filters = [(mf_config, [futures_filter])]
 
         self.visible_levels = 20
-        self.overrides=SGXOverrides
+        self.overrides = SGXOverrides
 
 class TestInsideMarketSmoke(BaseInsideMarketDepthSmoke):
 
@@ -45,7 +45,7 @@ class TestInsideMarketSmoke(BaseInsideMarketDepthSmoke):
         self.market_config_and_filters = [(mf_config, [futures_filter])]
 
         self.if_proxy = False
-        self.overrides=SGXOverrides
+        self.overrides = SGXOverrides
 
 class TestNTDTimeAndSalesFuturesSmoke(BaseTestNTDTimeAndSalesSmoke):
 
@@ -58,7 +58,7 @@ class TestNTDTimeAndSalesFuturesSmoke(BaseTestNTDTimeAndSalesSmoke):
 
         self.accumulate_ltq = True
         self.restart_timeout = 300
-        self.overrides = SGXOverrides
+        self.overrides = SGXTradestateOverrides
 
 class TestVAPSmoke(BaseTestVapSmoke):
 

@@ -52,7 +52,7 @@ class TestAggregateDepthMultilegsPFX(BaseTestAggregateDepth):
         super(TestAggregateDepthMultilegsPFX, self).__init__()
         register_crews(Worker.DIRECT)
 
-        self.market_config_and_filters = [(mf_multi_leg_config, [fspread_filter, ostrategy_filter])]
+        self.market_config_and_filters = [(mf_multi_leg_config, [fspread_filter])]
 
         self.visible_levels_and_Aconfig_settings = [(20, {PFX_enabled : 'true', NumDepthLevels : '20', EchoCount : '0'})]
 

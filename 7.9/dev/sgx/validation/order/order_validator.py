@@ -63,14 +63,17 @@ def setup_order(order_table):
     # ## Core Enums ##
     ##################
 #    core_enums_table.optout_rule('order_flags_is_order_flags_sent', 'True', None, note="New Order Server functionality")
-    core_enums_table.override_rule('order_flags_is_order_flags_sent',
-                                   cond='(is_order_flags_sent_if_touched or is_order_flags_sent_stop or is_order_status_hold or is_book_order_status_hold)',
-                                   pcr_number=228954, new_rule=None, note= "New Order Server functionality")
+#    core_enums_table.add_rule(basis_order_roundtrip.order_flags_is_order_flags_book, cond='True')
+    core_enums_table.optout_rule( 'order_flags_is_order_flags_sent', 'True', None, note="TEMPORARY OVRRIDE")
+    # core_enums_table.override_rule('order_flags_is_order_flags_sent',
+    #                                cond='(is_order_flags_sent_if_touched or is_order_flags_sent_stop or is_order_status_hold or is_book_order_status_hold)',
+    #                                pcr_number=228954, new_rule='order_flags_is_order_flags_book', note= "New Order Server functionality")
 #    core_enums_table.override_rule('order_flags_is_order_flags_sent',
 #                                   cond='is_order_type_sent_mkt or not (is_order_flags_sent_if_touched or is_order_flags_sent_stop)',
 #                                   pcr_number=228954, new_rule=None, note= "New Order Server functionality")
 
-    core_enums_table.add_rule(passive_aggressive_flag_is_set, cond='not (is_order_flags_sent_if_touched or is_order_flags_sent_stop or is_order_status_hold or is_book_order_status_hold)')
+#    core_enums_table.add_rule(passive_aggressive_flag_is_set, cond='True')
+#    core_enums_table.add_rule(passive_aggressive_flag_is_set, cond='not (is_order_flags_sent_if_touched or is_order_flags_sent_stop or is_order_status_hold or is_book_order_status_hold or is_exchange_reject or is_action_WaitForFill)')    
 
     core_enums_table.override_rule( 'order_status_modifier_is_none', 'is_action_WaitForTrigger and is_order_action_delete', 1,
                                     note="Because of OS Rule 4.14.5." )
